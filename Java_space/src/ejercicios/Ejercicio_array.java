@@ -1,4 +1,4 @@
-
+// Clase para mostrar que ventas y cuales son mayores a 2000 en un array de 30 
 package ejercicios;
 
 import java.util.Scanner;
