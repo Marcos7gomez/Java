@@ -17,7 +17,7 @@ public class VistaPersonas extends javax.swing.JFrame {
         initComponents();
         
         txtCodigoPersona.setEnabled(false);
-        
+        this.setLocationRelativeTo(null);
         
         CPersonas objetoPersona = new CPersonas();
         objetoPersona.mostrarPersonas(tbListaPersonas);
