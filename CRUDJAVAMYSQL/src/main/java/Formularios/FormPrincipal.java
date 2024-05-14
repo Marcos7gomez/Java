@@ -20,7 +20,7 @@ public class FormPrincipal extends javax.swing.JFrame {
         
         Clases.CUsuario objetoUsuario = new Clases.CUsuario();
         objetoUsuario.MostrarSexoCombo(cbsexo);
-        
+        objetoUsuario.mostrarUsuarios(tbusuarios);
     }
 
    
