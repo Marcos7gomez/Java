@@ -21,6 +21,9 @@ public class FormPrincipal extends javax.swing.JFrame {
         Clases.CUsuario objetoUsuario = new Clases.CUsuario();
         objetoUsuario.MostrarSexoCombo(cbsexo);
         objetoUsuario.mostrarUsuarios(tbusuarios);
+        
+        txtid.setEnabled(false);
+        txtrutaimagen.setEnabled(false);
     }
 
    
@@ -120,8 +123,18 @@ public class FormPrincipal extends javax.swing.JFrame {
         });
 
         btnModificar.setText("Modificar");
+        btnModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarActionPerformed(evt);
+            }
+        });
 
         btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -208,6 +221,11 @@ public class FormPrincipal extends javax.swing.JFrame {
 
             }
         ));
+        tbusuarios.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbusuariosMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tbusuarios);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -284,7 +302,29 @@ public class FormPrincipal extends javax.swing.JFrame {
         
         Clases.CUsuario objetoUsuario = new Clases.CUsuario();
         objetoUsuario.AgregarUsuario(txtnombres, txtapellidos, cbsexo, txtedad, dtfechanacimiento, archivoSeleccionado);
+        objetoUsuario.mostrarUsuarios(tbusuarios);
+        objetoUsuario.LimpiarCampos(txtid, txtnombres, txtapellidos, txtedad, dtfechanacimiento, txtrutaimagen, lblimagen);
     }//GEN-LAST:event_btnGuardarActionPerformed
+                //Asociamos el metodo de seleccionar al evento del mismo
+    private void tbusuariosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbusuariosMouseClicked
+        Clases.CUsuario objetoUsuario = new Clases.CUsuario();
+        objetoUsuario.Seleccionar(tbusuarios, txtid, txtnombres, txtapellidos, cbsexo, txtedad, dtfechanacimiento, lblimagen);
+        
+    }//GEN-LAST:event_tbusuariosMouseClicked
+
+    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
+        Clases.CUsuario objetoUsuario = new Clases.CUsuario();
+        objetoUsuario.ModificarUsuario(txtid, txtnombres, txtapellidos, cbsexo, txtedad, dtfechanacimiento, archivoSeleccionado);
+        objetoUsuario.mostrarUsuarios(tbusuarios);
+        objetoUsuario.LimpiarCampos(txtid, txtnombres, txtapellidos, txtedad, dtfechanacimiento, txtrutaimagen, lblimagen);
+    }//GEN-LAST:event_btnModificarActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        Clases.CUsuario objetoUsuario = new Clases.CUsuario();
+        objetoUsuario.EliminarUsuario(txtid);
+        objetoUsuario.mostrarUsuarios(tbusuarios);
+        objetoUsuario.LimpiarCampos(txtid, txtnombres, txtapellidos, txtedad, dtfechanacimiento, txtrutaimagen, lblimagen);
+    }//GEN-LAST:event_btnEliminarActionPerformed
 
     
     public static void main(String args[]) {

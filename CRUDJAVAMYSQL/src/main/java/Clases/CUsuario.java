@@ -10,8 +10,10 @@ import java.util.Date;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -159,4 +161,132 @@ public class CUsuario {
                     objetoConexion.cerrarConexion();
                 }
         }
+        
+        
+        public void Seleccionar (JTable totalUsuarios, JTextField id, JTextField nombres, JTextField apellidos, JComboBox sexo, JTextField edad, JDateChooser fnacimiento, JLabel foto){
+            
+            int fila = totalUsuarios.getSelectedRow();
+            
+            if (fila >=0) {
+                
+                id.setText(totalUsuarios.getValueAt(fila, 0).toString());
+                nombres.setText(totalUsuarios.getValueAt(fila, 1).toString());
+                apellidos.setText(totalUsuarios.getValueAt(fila, 2).toString());
+                
+                sexo.setSelectedItem(totalUsuarios.getValueAt(fila, 3).toString());
+                
+                edad.setText(totalUsuarios.getValueAt(fila, 4).toString());
+                
+                String fechaString = totalUsuarios.getValueAt(fila, 5).toString();
+                
+                Image imagen = (Image) totalUsuarios.getValueAt(fila, 6);
+                
+                ImageIcon originalIcon = new ImageIcon(imagen);
+                int lblanchura = foto.getWidth();
+                int lblaltura = foto.getHeight();
+                
+                Image ImagenEscalada = originalIcon.getImage().getScaledInstance(lblanchura, lblaltura, Image.SCALE_SMOOTH);
+                foto.setIcon(new ImageIcon(ImagenEscalada));
+                
+                try {
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                    Date fechadate = sdf.parse(fechaString);
+                    
+                    fnacimiento.setDate(fechadate);
+                } catch (Exception e) {
+                    
+                    JOptionPane.showMessageDialog(null, "Error al seleccionar, error:"+e.toString());
+                    
+                }
+
+            }
+        }
+            public void ModificarUsuario(JTextField id,JTextField nombres, JTextField apellidos, JComboBox combosexo, JTextField edad, JDateChooser fnacimiento, File foto){
+                
+                CConexion objetoConexion = new CConexion();
+                
+                String consulta = "UPDATE usuarios SET usuarios.nombres=?, usuarios.apellidos=?, usuarios.fksexo=?, usuarios.edad=?, usuarios.fnacimiento=?, usuarios.foto=? Where usuarios.id=?";
+                
+                try {
+                    
+                    FileInputStream fis = new FileInputStream(foto);
+                    CallableStatement cs = objetoConexion.estableceConexion().prepareCall(consulta);
+                    
+                    cs.setString(1, nombres.getText());
+                    cs.setString(2, apellidos.getText());
+                    
+                    int idSexo = (int) combosexo.getClientProperty(combosexo.getSelectedItem());
+                    
+                    cs.setInt(3, idSexo);
+                    
+                    cs.setInt(4, Integer.parseInt(edad.getText()));
+                    
+                    Date fechaSeleccionada = fnacimiento.getDate();
+                    
+                    java.sql.Date fechaSQL = new java.sql.Date (fechaSeleccionada.getTime());
+                    
+                    cs.setDate(5, fechaSQL);
+                    
+                    cs.setBinaryStream(6, fis, (int)foto.length());
+                    
+                    cs.setInt(7, Integer.parseInt(id.getText()));
+                    
+                    cs.execute();
+                    
+                    JOptionPane.showMessageDialog(null, "Se modificó correctamente");
+                    
+                } catch (Exception e) {
+                    
+                    JOptionPane.showMessageDialog(null, "No se modificó correctamente, error:"+e.toString());
+                }
+                
+                finally{
+                    objetoConexion.cerrarConexion();
+                }
+                
+            }
+            
+            public void EliminarUsuario(JTextField id){
+                
+                CConexion objetoConexion = new CConexion();
+                
+                
+                String consulta = "DELETE FROM usuarios WHERE usuarios.id=?";
+                
+                try {
+                    CallableStatement cs = objetoConexion.estableceConexion().prepareCall(consulta);
+                    
+                    cs.setInt(1, Integer.parseInt(id.getText()));
+                    
+                    cs.execute();
+                    
+                    JOptionPane.showMessageDialog(null, "Se eliminó correctamente");
+                } catch (Exception e) {
+                    
+                    JOptionPane.showMessageDialog(null, "No se eliminó correctamente, error:"+e.toString());
+                }
+                
+                finally{
+                    objetoConexion.cerrarConexion();
+                }
+            }
+            
+            public void LimpiarCampos(JTextField id,JTextField nombres, JTextField apellidos, JTextField edad, JDateChooser fnacimiento,JTextField rutaimagen,  JLabel imagencontenido){
+                
+                id.setText("");
+                nombres.setText("");
+                apellidos.setText("");
+                edad.setText("");
+                
+                Calendar calendario = Calendar.getInstance();
+                
+                fnacimiento.setDate(calendario.getTime());
+                
+                rutaimagen.setText("");
+                
+                imagencontenido.setIcon(null);
+                
+            }
+            
+            
 }
